@@ -43,7 +43,21 @@ describe('AppController (e2e)', () => {
         .expect([{ id: 1, title: 'test', year: 2020, genre: ['action'] }]);
     });
   });
-  
+
+  describe('movies/search', () => {
+    it('GET', () => {
+      return request(app.getHttpServer())
+        .get('/movies/search?year=2020')
+        .expect(200);
+    });
+
+    it('GET 404', () => {
+      return request(app.getHttpServer())
+        .get('/movies/search?year=999')
+        .expect(404);
+    });
+  });
+
   describe('/movies/:id', () => {
     it('GET', () => {
       return request(app.getHttpServer())

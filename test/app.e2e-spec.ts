@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -12,6 +12,13 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
     await app.init();
   });
 
@@ -22,12 +29,9 @@ describe('AppController (e2e)', () => {
       .expect('Hello World!');
   });
 
-  describe('/movies', ()=> {
+  describe('/movies', () => {
     it('GET', () => {
-      return request(app.getHttpServer())
-        .get('/movies')
-        .expect(200)
-        .expect([]);
+      return request(app.getHttpServer()).get('/movies').expect(200).expect([]);
     });
 
     it('POST', () => {
@@ -36,13 +40,42 @@ describe('AppController (e2e)', () => {
         .post('/movies')
         .send(fakeMovie)
         .expect(201)
-        .expect([ { id: 1, title: 'test', year: 2020, genre: [ 'action' ] } ]);
+        .expect([{ id: 1, title: 'test', year: 2020, genre: ['action'] }]);
     });
   });
+  
+  describe('/movies/:id', () => {
+    it('GET', () => {
+      return request(app.getHttpServer())
+        .get('/movies/1')
+        .expect(200)
+        .expect({ id: 1, title: 'test', year: 2020, genre: ['action'] });
+    });
 
-  describe('/movies/:id', ()=> {
-    it.todo('GET');
-    it.todo('PATCH');
-    it.todo('DELETE');
+    it('GET 404', () => {
+      return request(app.getHttpServer()).get('/movies/99').expect(404);
+    });
+
+    it('PATCH', () => {
+      return request(app.getHttpServer())
+        .patch('/movies/1')
+        .send({ year: 2025 })
+        .expect(200);
+    });
+
+    it('PATCH 404', () => {
+      return request(app.getHttpServer())
+        .patch('/movies/99')
+        .send({ year: 2025 })
+        .expect(404);
+    });
+
+    it('DELETE 404', () => {
+      return request(app.getHttpServer()).delete('/movies/99').expect(404);
+    });
+
+    it('DELETE', () => {
+      return request(app.getHttpServer()).delete('/movies/1').expect(200);
+    });
   });
 });

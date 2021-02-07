@@ -17,9 +17,9 @@ describe('MoviesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAllMovies', ()=> {
-    it('should be an array', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']};
+  describe('getAllMovies', () => {
+    it('should be an array', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       const first = service.getAllMovies();
       expect(first.length).toEqual(0);
       service.createMovie(fakeMovie);
@@ -31,9 +31,9 @@ describe('MoviesService', () => {
     });
   });
 
-  describe('createMovie', ()=> {
-    it('should create a movie', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']}
+  describe('createMovie', () => {
+    it('should create a movie', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       const result = service.createMovie(fakeMovie);
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(Array);
@@ -42,30 +42,30 @@ describe('MoviesService', () => {
     });
   });
 
-  describe('updateMovie', ()=> {
-    it('should update a movie', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']}
+  describe('updateMovie', () => {
+    it('should update a movie', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       const movie = service.createMovie(fakeMovie);
       const movieID = movie[0]['id'];
-      service.updateMovie(movieID, {'year': 2021});
+      service.updateMovie(movieID, { year: 2021 });
       const updatedMovie = service.getSingleMovie(movieID);
       expect(updatedMovie).toBeDefined();
       expect(updatedMovie.title).toEqual('test');
       expect(updatedMovie.year).toEqual(2021);
     });
 
-    it('should throw error', ()=> {
+    it('should throw error', () => {
       try {
-        service.updateMovie(99, {'year': 2021});
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException)
+        service.updateMovie(99, { year: 2021 });
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
       }
     });
   });
 
-  describe('deleteMovie', ()=> {
-    it('should delete a movie', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']}
+  describe('deleteMovie', () => {
+    it('should delete a movie', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       const movie = service.createMovie(fakeMovie);
       expect(movie).toBeDefined();
       expect(movie).toBeInstanceOf(Array);
@@ -77,29 +77,29 @@ describe('MoviesService', () => {
     });
   });
 
-  describe('searchForMovie', ()=> {
-    it('should get movie by year', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']}
+  describe('searchForMovie', () => {
+    it('should get movie by year', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       service.createMovie(fakeMovie);
-      const result = service.searchForMovie("2020");
+      const result = service.searchForMovie('2020');
       expect(result).toBeDefined();
       expect(result).toBeInstanceOf(Object);
       expect(result['title']).toEqual('test');
       expect(result['year']).toEqual(2020);
     });
 
-    it('should throw error', ()=> {
+    it('should throw error', () => {
       try {
-        service.searchForMovie("2020");
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException)
+        service.searchForMovie('2020');
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
       }
     });
   });
 
-  describe('getSingleMovie', ()=> {
-    it('should get a movie', ()=> {
-      let fakeMovie = {'title': 'test', 'year': 2020, 'genre': ['action']}
+  describe('getSingleMovie', () => {
+    it('should get a movie', () => {
+      let fakeMovie = { title: 'test', year: 2020, genre: ['action'] };
       const movie = service.createMovie(fakeMovie);
       expect(movie).toBeDefined();
       expect(movie).toBeInstanceOf(Array);
@@ -111,11 +111,11 @@ describe('MoviesService', () => {
       expect(result['year']).toEqual(2020);
     });
 
-    it('should throw error', ()=> {
+    it('should throw error', () => {
       try {
         service.getSingleMovie(1);
-      } catch(e) {
-        expect(e).toBeInstanceOf(NotFoundException)
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
       }
     });
   });
